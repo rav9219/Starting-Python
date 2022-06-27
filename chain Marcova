@@ -1,0 +1,57 @@
+#Цепи Маркова - генератор текста на основе анализа цепи Маркова
+#Выдает ошибку при выборе начальным словом последнее слово в книге
+
+from logging.config import valid_ident
+import random
+
+def open_book(book):# Читает файл, разбивает строки на слова, преобразует в строчные  
+    book_line = []
+    fin = open(book)
+    for line in fin:
+        for word in line.split():
+            word = word.lower()
+            book_line.append(word)
+    return book_line
+
+def make_pairs(corpus):
+    pairs = {}
+    for x in range (len(corpus)-1):
+        word_1 = corpus[x]
+        word_2 = corpus[x + 1]
+        if word_1 not in pairs:
+            pairs[word_1] = [word_2]
+        else:
+            pairs[word_1].append(word_2)
+    return pairs
+
+def analiz_marcova(pairs):
+    chain_marcova = []
+    start_word = random.choice(list(pairs.keys()))
+    chain_marcova.append(start_word)
+    print ('Введите количество слов в цепи:')
+    num_word = int(input())-1
+    for x in range (num_word):
+        word_2 = random_word(start_word, pairs)
+        chain_marcova.append(word_2)
+        start_word = word_2
+    return chain_marcova
+
+def random_word(word, pairs):
+    words = pairs[word]
+    return random.choice(words)
+    
+def chain(spisok):
+    delimiter = ' '
+    string_num = delimiter.join(spisok)
+    return string_num
+
+
+def main():
+    book = open_book(input()) #Введите вашу книгу в txt формате
+    pair = make_pairs(book)
+    chain_0 = analiz_marcova(pair)
+    print (chain(chain_0))
+
+
+if __name__ == '__main__': 
+    main()
